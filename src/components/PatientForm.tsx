@@ -1,4 +1,16 @@
+import { useForm } from "react-hook-form";
+import Error from "../ui/Error";
+
 export default function PatientForm() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+
+    const registerPatient = () => {
+    };
+
     return (
         <div className="mx-5">
             <h2 className="font-black text-3xl text-center">
@@ -12,6 +24,7 @@ export default function PatientForm() {
 
             <form
                 className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
+                onSubmit={handleSubmit(registerPatient)}
                 noValidate
             >
                 <div className="mb-5">
@@ -26,7 +39,21 @@ export default function PatientForm() {
                         className="w-full p-3  border border-gray-100"
                         type="text"
                         placeholder="Nombre del Paciente"
+                        {...register("name", {
+                            required: "El nombre es obligatorio",
+                            minLength: {
+                                value: 3,
+                                message:
+                                    "El nombre debe tener al menos 3 caracteres",
+                            },
+                        })}
                     />
+                    {/* {errors.name ? (
+                        <p className="text-red-500 text-sm">
+                            {errors.name.message as string}
+                        </p>
+                    ) : null} */}
+                    {errors.name ? <Error message={errors.name.message?.toString() || ""} /> : null}
                 </div>
 
                 <div className="mb-5">
