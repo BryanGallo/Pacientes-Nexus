@@ -1,6 +1,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import Error from "../ui/Error";
 import type { Patient } from "../types";
+import { usePatientStore } from "../store/store";
 
 export default function PatientForm() {
     const {
@@ -9,8 +10,13 @@ export default function PatientForm() {
         formState: { errors },
     } = useForm<Patient>();
 
+    //* Cualquiera de las dos formas es correcta
+    // const { addPatient } = usePatientStore();
+    const addPatient = usePatientStore((state) => state.addPatient);
+
     const registerPatient: SubmitHandler<Patient> = (data) => {
         console.log(data);
+        addPatient(data);
     };
 
     return (
@@ -77,11 +83,11 @@ export default function PatientForm() {
                         {...register("caretaker", {
                             required:
                                 "El nombre del propietario es obligatorio",
-                                minLength: {
-                                    value: 4,
-                                    message:
-                                        "El nombre del propietario debe tener al menos 4 caracteres",
-                                },
+                            minLength: {
+                                value: 4,
+                                message:
+                                    "El nombre del propietario debe tener al menos 4 caracteres",
+                            },
                         })}
                     />
                     {errors.caretaker ? (
@@ -131,9 +137,10 @@ export default function PatientForm() {
                         type="date"
                         {...register("date", {
                             required: "La fecha es obligatoria",
-                            min: { 
+                            min: {
                                 value: new Date().toISOString().split("T")[0],
-                                message: "La fecha debe ser igual o mayor a la fecha actual",
+                                message:
+                                    "La fecha debe ser igual o mayor a la fecha actual",
                             },
                         })}
                     />
