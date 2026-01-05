@@ -1,4 +1,4 @@
-export type FormPatient = {
+export type Patient = {
     id: string;
     name: string;
     caretaker: string;
@@ -7,4 +7,4 @@ export type FormPatient = {
     symptoms: string;
 };
 
-export type Patient = Omit<FormPatient, "id">;
+export type DraftPatient = Omit<Patient, "id">;
