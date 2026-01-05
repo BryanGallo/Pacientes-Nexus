@@ -8,6 +8,7 @@ export default function PatientForm() {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm<Patient>();
 
     //* Cualquiera de las dos formas es correcta
@@ -17,6 +18,7 @@ export default function PatientForm() {
     const registerPatient: SubmitHandler<Patient> = (data) => {
         console.log(data);
         addPatient(data);
+        reset();
     };
 
     return (
