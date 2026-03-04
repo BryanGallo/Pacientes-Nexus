@@ -1,26 +1,46 @@
 import type { Patient } from "../types";
 import { usePatientStore } from "../store/store";
+import PatientCardItem from "./PatientCardItem";
+
+const labels = {
+    id: "ID",
+    name: "Nombre",
+    caretaker: "Propietario",
+    email: "Email",
+    date: "Fecha Alta",
+    symptoms: "Síntomas",
+} as const;
 
 export default function PatientCard({ patient }: { patient: Patient }) {
-    const { deletePatient } = usePatientStore();
+    const { deletePatient, getActivePatient } = usePatientStore();
+
     return (
-        (
-            <div className="bg-white shadow-md rounded-lg py-10 px-5 mb-10">
-                <h3 className="text-2xl font-bold">{patient.name}</h3>
-                <p className="text-sm text-gray-500">{patient.email}</p>
-                <p className="text-sm text-gray-500">
-                    Cuidador: {patient.caretaker}
-                </p>
-                <p className="text-sm text-gray-500">
-                    Fecha de Alta: {patient.date.toString()}
-                </p>
-                <p className="text-sm text-gray-500">
-                    Síntomas: {patient.symptoms}
-                </p>
-                <p className="text-sm text-gray-500">Email: {patient.email}</p>
-                <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer" onClick={() => deletePatient(patient.id)}>Editar Paciente</button>
-                <button type="button" className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer" onClick={() => deletePatient(patient.id)}>Eliminar Paciente</button>
+        <div className="bg-white shadow-md rounded-lg py-10 px-5 mb-10">
+            {Object.entries(labels).map(([key, label]) => (
+                <PatientCardItem
+                    key={key}
+                    label={label}
+                    data={patient[key as keyof typeof labels].toString()}
+                />
+            ))}
+
+            <div className="flex justify-between mt-10">
+                <button
+                    type="button"
+                    className="py-2 px-10 bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase rounded-lg"
+                    onClick={() => getActivePatient(patient.id)}
+                >
+                    Editar
+                </button>
+
+                <button
+                    type="button"
+                    className="py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg"
+                    onClick={() => deletePatient(patient.id)}
+                >
+                    Eliminar
+                </button>
             </div>
-        )
+        </div>
     );
 }
