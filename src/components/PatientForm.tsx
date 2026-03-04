@@ -2,6 +2,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import Error from "../ui/Error";
 import type { Patient } from "../types";
 import { usePatientStore } from "../store/store";
+import { useEffect } from "react";
 
 export default function PatientForm() {
     const {
@@ -14,10 +15,27 @@ export default function PatientForm() {
     //* Cualquiera de las dos formas es correcta
     // const { addPatient } = usePatientStore();
     const addPatient = usePatientStore((state) => state.addPatient);
+    const activePatient = usePatientStore((state) => state.activePatient);
+    const patients = usePatientStore((state) => state.patients);
+    const updatePatient = usePatientStore((state) => state.updatePatient);
+
+    useEffect(() => {
+        if (activePatient) {
+            const patient = patients.find(
+                (patient) => patient.id === activePatient,
+            );
+            if (patient) {
+                reset(patient);
+            }
+        }
+    }, [activePatient, patients, reset]);
 
     const registerPatient: SubmitHandler<Patient> = (data) => {
-        console.log(data);
-        addPatient(data);
+        if (activePatient) {
+            updatePatient(data);
+        } else {
+            addPatient(data);
+        }
         reset();
     };
 
@@ -29,7 +47,9 @@ export default function PatientForm() {
 
             <p className="text-lg mt-5 text-center mb-10">
                 Añade Pacientes y {""}
-                <span className="text-indigo-600 font-bold">Administralos</span>
+                <span className="text-indigo-600 font-bold">
+                    {activePatient ? "Edítalos" : "Admistralos"}
+                </span>
             </p>
 
             <form
@@ -178,7 +198,11 @@ export default function PatientForm() {
                 <input
                     type="submit"
                     className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-                    value="Guardar Paciente"
+                    value={
+                        activePatient
+                            ? "Actualizar Paciente"
+                            : "Guardar Paciente"
+                    }
                 />
             </form>
         </div>
