@@ -8,6 +8,7 @@ type PatientState = {
     activePatient: Patient["id"];
     getActivePatient: (id: Patient["id"]) => void;
     updatePatient: (data: DraftPatient) => void;
+    clearActivePatient: () => void;
 };
 
 export const usePatientStore = create<PatientState>((set) => ({
@@ -41,6 +42,11 @@ export const usePatientStore = create<PatientState>((set) => ({
                     ? { id: state.activePatient, ...data }
                     : patient,
             ),
+            activePatient: "",
+        }));
+    },
+    clearActivePatient: () => {
+        set(() => ({
             activePatient: "",
         }));
     },

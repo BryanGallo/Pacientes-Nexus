@@ -18,6 +18,9 @@ export default function PatientForm() {
     const activePatient = usePatientStore((state) => state.activePatient);
     const patients = usePatientStore((state) => state.patients);
     const updatePatient = usePatientStore((state) => state.updatePatient);
+    const clearActivePatient = usePatientStore(
+        (state) => state.clearActivePatient,
+    );
 
     useEffect(() => {
         if (activePatient) {
@@ -27,6 +30,14 @@ export default function PatientForm() {
             if (patient) {
                 reset(patient);
             }
+        } else {
+            reset({
+                name: "",
+                caretaker: "",
+                email: "",
+                date: "",
+                symptoms: "",
+            });
         }
     }, [activePatient, patients, reset]);
 
@@ -204,6 +215,15 @@ export default function PatientForm() {
                             : "Guardar Paciente"
                     }
                 />
+                {activePatient && (
+                    <button
+                        type="button"
+                        className="bg-red-600 w-full p-3 mt-5 text-white uppercase font-bold hover:bg-red-700 cursor-pointer transition-colors"
+                        onClick={() => clearActivePatient()}
+                    >
+                        Limpiar formulario
+                    </button>
+                )}
             </form>
         </div>
     );
