@@ -20,7 +20,7 @@ export default function PatientCard({ patient }: { patient: Patient }) {
                 <PatientCardItem
                     key={key}
                     label={label}
-                    data={patient[key as keyof typeof labels].toString()}
+                    data={patient[key as keyof typeof labels]}
                 />
             ))}
 
