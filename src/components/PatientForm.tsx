@@ -10,6 +10,7 @@ export default function PatientForm() {
         handleSubmit,
         formState: { errors },
         reset,
+        // setValue,
     } = useForm<Patient>();
 
     //* Cualquiera de las dos formas es correcta
@@ -28,6 +29,13 @@ export default function PatientForm() {
                 (patient) => patient.id === activePatient,
             );
             if (patient) {
+                //? dispara una actualización interna por cada vez que lo llamas olo deberías usar setValue cuando quieras cambiar un campo específico sin afectar al resto del formulario.
+                // setValue("name", patient.name);
+                // setValue("caretaker", patient.caretaker);
+                // setValue("email", patient.email);
+                // setValue("date", patient.date);
+                // setValue("symptoms", patient.symptoms);
+                //* reset() es la forma correcta de hacerlo envia un objeto con los valores del paciente
                 reset(patient);
             }
         } else {
