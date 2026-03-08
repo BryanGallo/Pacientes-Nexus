@@ -1,9 +1,11 @@
+import { ToastContainer } from "react-toastify";
 import PatientForm from "./components/PatientForm";
 import PatientList from "./components/PatientList";
 
 function App() {
     return (
         <>
+            <ToastContainer />
             <div className="container mx-auto p-4 rounded-lg shadow-md">
                 <h1 className="text-2xl font-bold text-center md:w-2/3 mx-auto">
                     Seguimiento de pacientes{" "}

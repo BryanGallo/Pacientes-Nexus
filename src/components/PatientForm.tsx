@@ -1,8 +1,9 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
-import Error from "../ui/Error";
-import type { Patient } from "../types";
-import { usePatientStore } from "../store/store";
 import { useEffect } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
+import { usePatientStore } from "../store/store";
+import type { Patient } from "../types";
+import Error from "../ui/Error";
 
 export default function PatientForm() {
     const {
@@ -52,8 +53,10 @@ export default function PatientForm() {
     const registerPatient: SubmitHandler<Patient> = (data) => {
         if (activePatient) {
             updatePatient(data);
+            toast.success("Paciente actualizado correctamente");
         } else {
             addPatient(data);
+            toast.success("Paciente agregado correctamente");
         }
         reset();
     };
