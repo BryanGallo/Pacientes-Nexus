@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import type { DraftPatient, Patient } from "../types";
 
 type PatientState = {
@@ -13,44 +13,55 @@ type PatientState = {
 };
 
 export const usePatientStore = create<PatientState>()(
-    devtools((set) => ({
-        patients: [],
-        activePatient: "",
-        addPatient: (data: DraftPatient) => {
-            const newPatient: Patient = {
-                ...data,
-                //* Genera un ID aleatorio usando el api
-                //* https://developer.mozilla.org/es/docs/Web/API/Crypto/randomUUID
-                id: crypto.randomUUID(),
-            };
-            set((state) => ({
-                patients: [...state.patients, newPatient],
-            }));
-        },
-        deletePatient: (id) => {
-            set((state) => ({
-                patients: state.patients.filter((patient) => patient.id !== id),
-            }));
-        },
-        getActivePatient: (id) => {
-            set(() => ({
-                activePatient: id,
-            }));
-        },
-        updatePatient: (data) => {
-            set((state) => ({
-                patients: state.patients.map((patient) =>
-                    patient.id === state.activePatient
-                        ? { id: state.activePatient, ...data }
-                        : patient,
-                ),
+    devtools(
+        persist(
+            (set) => ({
+                patients: [],
                 activePatient: "",
-            }));
-        },
-        clearActivePatient: () => {
-            set(() => ({
-                activePatient: "",
-            }));
-        },
-    })),
+                addPatient: (data: DraftPatient) => {
+                    const newPatient: Patient = {
+                        ...data,
+                        //* Genera un ID aleatorio usando el api
+                        //* https://developer.mozilla.org/es/docs/Web/API/Crypto/randomUUID
+                        id: crypto.randomUUID(),
+                    };
+                    set((state) => ({
+                        patients: [...state.patients, newPatient],
+                    }));
+                },
+                deletePatient: (id) => {
+                    set((state) => ({
+                        patients: state.patients.filter(
+                            (patient) => patient.id !== id,
+                        ),
+                    }));
+                },
+                getActivePatient: (id) => {
+                    set(() => ({
+                        activePatient: id,
+                    }));
+                },
+                updatePatient: (data) => {
+                    set((state) => ({
+                        patients: state.patients.map((patient) =>
+                            patient.id === state.activePatient
+                                ? { id: state.activePatient, ...data }
+                                : patient,
+                        ),
+                        activePatient: "",
+                    }));
+                },
+                clearActivePatient: () => {
+                    set(() => ({
+                        activePatient: "",
+                    }));
+                },
+            }),
+            {
+                name: "patient-storage",
+                //? Por defecto es localStorage, pero se puede cambiar a sessionStorage
+                // storage: createJSONStorage(() => sessionStorage),
+            },
+        ),
+    ),
 );
